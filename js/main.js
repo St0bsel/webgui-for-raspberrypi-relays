@@ -1,8 +1,13 @@
 var pinarray;
+var tmp;
+var pinarray2;
 var pinarraydata;
 var pinarraylength;
 
-function getarray(){
+var switcharray;
+var switcharraylength;
+
+function getarray(callback){
   $.ajax({
       type: 'POST',
       url: 'php/getarray.php',
@@ -12,8 +17,9 @@ function getarray(){
       success: function(pinarraydata) {
         console.log("array successfully read");
         pinarray = pinarraydata;
-        pinarraylength = pinarray[0].length;
-        create();
+        pinarraylength = pinarraydata[0].length;
+        switcharraylength = pinarraydata[1].length;
+        callback();
       },
   });
 };
@@ -73,13 +79,13 @@ function create(){
   detectchanges();
 }
 
-function changejson (relaytochange, name, pin, method){
-	console.log(relaytochange+name+pin);
+function changejson (relaytochange, name, pin, relay, method){
+	console.log(relaytochange+name+pin+relay);
 	//run php script on server
         $.ajax({
             type: 'POST',
             url: 'php/change.php',
-            data: {pin: relaytochange, name: name, gpiopin: pin, method: method},
+            data: {change: relaytochange, name: name, gpiopin: pin, relay: relay, method: method},
             cache: false,
             success: function(test) {
               console.log("changes successfully written");
@@ -101,6 +107,7 @@ function opensettings(){
 		select.setAttribute('name',"relayname");
 		select.setAttribute('size',pinarraylength);
 		select.setAttribute('id',"relayselection");
+    select.setAttribute('class', "selection");
 
 		for (var i = 0; i < pinarraylength; i++) {
 			var option = document.createElement("option");
@@ -129,6 +136,7 @@ function opensettings(){
     div2.appendChild(addrelaydiv);
 		div2.appendChild(submitdiv);
 
+    //this function starts here
     function relayoptions(relaytochange, method){
       if (method == 1) {
         var name = "set the relay name";
@@ -191,17 +199,18 @@ function opensettings(){
       $('#removerelaydiv').click(function(){
         var relayname = $('#relayname').val();
         var gpiopin = $('#gpiopin').val();
-        changejson(relaytochange, relayname, gpiopin, 2);
-        location.reload();
+        changejson(relaytochange, relayname, gpiopin, 0, 2);
+        //location.reload();
       });
 
       $('#changesettings').click(function(){
         var relayname = $('#relayname').val();
         var gpiopin = $('#gpiopin').val();
-        changejson(relaytochange, relayname, gpiopin, 1);
-        location.reload();
+        changejson(relaytochange, relayname, gpiopin, 0, 1);
+        //location.reload();
       });
     }
+    //and ends here
 
     $('#addrelaydiv').click(function(){
       relayoptions(pinarraylength, 1);
@@ -209,14 +218,171 @@ function opensettings(){
 
 		$('#openmore').click(function(){
 			$('#relayselection option').each(function() {
-			if($(this).is(':selected')){
-				var relaytochange = document.getElementById("relayselection").value;
-        relayoptions(relaytochange, 0);
-			}
-		});
+  			if($(this).is(':selected')){
+  				var relaytochange = document.getElementById("relayselection").value;
+          relayoptions(relaytochange, 0);
+  			}
+		  });
 		});
 	});
 }
+
+function openswitchsettings() {
+  $('#openswitchsettings').click(function(){
+    console.log("in");
+    var info = document.createElement("p");
+		var infotxt = document.createTextNode("select the switch which info you want to change");
+		info.appendChild(infotxt);
+
+		var form = document.createElement("form");
+		form.setAttribute('method',"post");
+		form.setAttribute('action',"");
+
+		var select = document.createElement("select");
+		select.setAttribute('name',"switchselection");
+		select.setAttribute('size',switcharraylength);
+		select.setAttribute('id',"switchselection");
+    select.setAttribute('class', "selection");
+
+    for (var i = 0; i < switcharraylength; i++) {
+      var switchname = pinarray[1][i][0];
+			var option = document.createElement("option");
+			option.setAttribute('value',i);
+			var txt = document.createTextNode(switchname);
+			option.appendChild(txt);
+			select.appendChild(option);
+		}
+		form.appendChild(select);
+
+    var submitdiv = document.createElement("div");
+		submitdiv.setAttribute('id',"openmore_switch");
+		submitdiv.setAttribute('class',"button");
+		var txt = document.createTextNode("click");
+		submitdiv.appendChild(txt);
+
+    var addswitchdiv = document.createElement("div");
+		addswitchdiv.setAttribute('id',"addswitchdiv");
+		addswitchdiv.setAttribute('class',"button");
+    var txt = document.createTextNode("add switch");
+		addswitchdiv.appendChild(txt);
+
+		var div3 = document.getElementById("switchsettings");
+		div3.appendChild(info);
+		div3.appendChild(form);
+    div3.appendChild(addswitchdiv);
+		div3.appendChild(submitdiv);
+
+    //this function starts here
+    function switchoptions(switchtochange, method){
+      if (method == 1) {
+        var name = "set the switch name";
+        var gpiopin = 0;
+        var relay = 0;
+      }
+      else if (method == 0) {
+        var name = pinarray[1][switchtochange][0];
+        var gpiopin = pinarray[1][switchtochange][1];
+        var relay = pinarray[1][switchtochange][2];
+      }
+
+      $('#openmore_switch').remove();
+
+      var f2 = document.createElement("form");
+      f2.setAttribute('method',"post");
+      f2.setAttribute('action',"");
+
+      //switchname
+      var i1info = document.createElement("p");
+      var i1infotxt = document.createTextNode("Switchname");
+      i1info.appendChild(i1infotxt);
+
+      var i1 = document.createElement("input");
+      i1.setAttribute('type',"text");
+      i1.setAttribute('name',"switchname");
+      i1.setAttribute('value',name);
+      i1.setAttribute('id',"switchname");
+      f2.appendChild(i1info);
+      f2.appendChild(i1);
+
+      //gpiopin
+      var i2info = document.createElement("p");
+      var i2infotxt = document.createTextNode("Gpiopin");
+      i2info.appendChild(i2infotxt);
+
+      var i2 = document.createElement("input");
+      i2.setAttribute('type',"number");
+      i2.setAttribute('name',"gpiopin");
+      i2.setAttribute('value',gpiopin);
+      i2.setAttribute('id',"gpiopin");
+      f2.appendChild(i2info);
+      f2.appendChild(i2);
+
+      //relay
+      var i3info = document.createElement("p");
+      var i3infotxt = document.createTextNode("Relay");
+      i3info.appendChild(i3infotxt);
+
+      var i3 = document.createElement("input");
+      i3.setAttribute('type',"number");
+      i3.setAttribute('name',"switchrelay");
+      i3.setAttribute('value',relay);
+      i3.setAttribute('id',"switchrelay");
+      f2.appendChild(i3info);
+      f2.appendChild(i3);
+
+      div3.appendChild(f2);
+
+      var removeswitchdiv = document.createElement("div");
+      removeswitchdiv.setAttribute('id',"removeswitchdiv");
+      removeswitchdiv.setAttribute('class',"button");
+      var txt = document.createTextNode("remove switch");
+      removeswitchdiv.appendChild(txt);
+
+      div3.appendChild(removeswitchdiv);
+
+
+      var submitdiv = document.createElement("div");
+      submitdiv.setAttribute('id',"changesettings");
+      submitdiv.setAttribute('class',"button");
+      var txt = document.createTextNode("click");
+      submitdiv.appendChild(txt);
+
+      div3.appendChild(submitdiv);
+
+      $('#removerelaydiv').click(function(){
+        var switchname = $('#switchname').val();
+        var gpiopin = $('#gpiopin').val();
+        var relay = $('#switchrelay').val();
+        changejson(switchtochange, switchname, gpiopin, relay, 4);
+        location.reload();
+      });
+
+      $('#changesettings').click(function(){
+        var switchname = $('#switchname').val();
+        var gpiopin = $('#gpiopin').val();
+        var relay = $('#switchrelay').val();
+        changejson(switchtochange, switchname, gpiopin, relay, 3);
+        location.reload();
+      });
+    }
+    //and ends here
+
+    $('#addswitchdiv').click(function(){
+      switchoptions(switcharraylength, 1);
+    });
+
+		$('#openmore_switch').click(function(){
+			$('#switchselection option').each(function() {
+  			if($(this).is(':selected')){
+  				var switchtochange = document.getElementById("switchselection").value;
+          switchoptions(switchtochange, 0);
+  			}
+		  });
+		});
+
+  });
+}
+
 
 function detectchanges(){
 	$('#runboot').click(function(){
@@ -234,7 +400,6 @@ function detectchanges(){
     var divid = '#'+i;
     $(divid).click(function(){
         var pinid = $(this).attr('id');
-        //getarray();
         var pinstatus = pinarray[0][pinid][2];
         //set pinstatus to oposit
         if (pinstatus == 1) {
@@ -248,13 +413,13 @@ function detectchanges(){
         $.ajax({
             type: 'POST',
             url: 'php/change.php',
-            data: {'pin': pinid},
+            data: {change: pinid, method: 0},
             cache: false,
             success: function(test) {
               console.log("changes successfully written");
             },
         });
-        window.setTimeout(clear,500);
+        window.setTimeout(clear,100);
     });
   }
 }
@@ -268,9 +433,24 @@ function clear(){
     var divid2 = '#pindiv'+i;
     $(divid2).remove();
   }
-  getarray();
+  getarray(function(){
+    create();
+  });
 }
 
-$( document ).ready( getarray );
-$(document).ready(test);
+function refresh() {
+  var refreshtime = document.getElementById("refreshtime").value;
+  clear();
+  setTimeout(refresh, refreshtime);
+}
+
+$(document).ready(function(){
+  getarray(function(){
+    test();
+    openswitchsettings();
+    create();
+    refresh();
+  });
+});
+//$(document).ready(test);
 $(document).ready(opensettings);

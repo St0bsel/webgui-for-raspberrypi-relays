@@ -12,7 +12,16 @@
     </div>
     <h1>Settings</h1>
 	<div id="txt">
-		<p>run this if your server just started, also required after reboot. This will set all your relays to off.
+    <p>refresh time (this is used to detect changes on the server, for example if you press the button)</p>
+    <form type="POST" action="">
+      <select id="refreshtime" class="selection">
+        <option value="5000">5s</option>
+        <option value="10000">10s</option>
+        <option value="30000">30s</option>
+        <option value="60000" selected="selected">60s</option>
+      </select>
+    </form>
+		<p>run this if your server just started, also required after reboot. This will set all your relays to off.</p>
 		<div id="runboot" class="button">
 			<p>click</p>
 		</div>
@@ -20,8 +29,14 @@
 		<div id="opensettings" class="button">
 			<p>click</p>
 		</div>
-			<div id="settings">
+		<div id="settings">
 		</div>
+    <p>change parameters of each switch.</p>
+		<div id="openswitchsettings" class="button">
+			<p>click</p>
+		</div>
+    <div id="switchsettings">
+    </div>
 	</div>
   </body>
 </html>

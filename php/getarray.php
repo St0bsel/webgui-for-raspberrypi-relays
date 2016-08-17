@@ -1,6 +1,5 @@
 <?php
-  $file = file_get_contents('data.json');
-  $pins = json_decode($file);
-  //because one dimesion to much
-  echo (json_encode($pins));
+$file = file_get_contents( __DIR__ . DIRECTORY_SEPARATOR .'data.json');
+  echo ($file);
+	unset($file);
 ?>
