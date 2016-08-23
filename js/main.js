@@ -65,10 +65,10 @@ function create(){
     divchange.setAttribute('class',"changepindiv");
     elementchange.appendChild(divchange);
     if (status == 1) {
-      $('#'+divname1).css('background-color', 'green');
+      $('#'+divname1).css('background-color', '#1FB163');
     }
     else {
-      $('#'+divname1).css('background-color', 'red');
+      $('#'+divname1).css('background-color', '#FA5A2C');
     }
     //create TXT on changediv
     var para = document.createElement("p");
@@ -88,300 +88,12 @@ function changejson (relaytochange, name, pin, relay, method){
             data: {change: relaytochange, name: name, gpiopin: pin, relay: relay, method: method},
             cache: false,
             success: function(test) {
-              console.log("changes successfully written");
+              console.log("changes successfully: "+test);
             },
         });
 }
 
-function opensettings(){
-	$('#opensettings').click(function(){
-		var info = document.createElement("p");
-		var infotxt = document.createTextNode("select the relay which info you want to change");
-		info.appendChild(infotxt);
 
-		var f = document.createElement("form");
-		f.setAttribute('method',"post");
-		f.setAttribute('action',"");
-
-		var select = document.createElement("select");
-		select.setAttribute('name',"relayname");
-		select.setAttribute('size',pinarraylength);
-		select.setAttribute('id',"relayselection");
-    select.setAttribute('class', "selection");
-
-		for (var i = 0; i < pinarraylength; i++) {
-			var option = document.createElement("option");
-			option.setAttribute('value',i);
-			var txt = document.createTextNode(i);
-			option.appendChild(txt);
-			select.appendChild(option);
-		}
-		f.appendChild(select);
-
-		var submitdiv = document.createElement("div");
-		submitdiv.setAttribute('id',"openmore");
-		submitdiv.setAttribute('class',"button");
-		var txt = document.createTextNode("click");
-		submitdiv.appendChild(txt);
-
-    var addrelaydiv = document.createElement("div");
-		addrelaydiv.setAttribute('id',"addrelaydiv");
-		addrelaydiv.setAttribute('class',"button");
-    var txt = document.createTextNode("add relay");
-		addrelaydiv.appendChild(txt);
-
-		var div2 = document.getElementById("settings");
-		div2.appendChild(info);
-		div2.appendChild(f);
-    div2.appendChild(addrelaydiv);
-		div2.appendChild(submitdiv);
-
-    //this function starts here
-    function relayoptions(relaytochange, method){
-      if (method == 1) {
-        var name = "set the relay name";
-        var gpiopin = 0;
-      }
-      else if (method == 0) {
-        var name = pinarray[0][relaytochange][0];
-        var gpiopin = pinarray[0][relaytochange][1];
-      }
-
-      $('#openmore').remove();
-
-      var f2 = document.createElement("form");
-      f2.setAttribute('method',"post");
-      f2.setAttribute('action',"");
-
-      var i1info = document.createElement("p");
-      var i1infotxt = document.createTextNode("Relayname");
-      i1info.appendChild(i1infotxt);
-
-      var i1 = document.createElement("input");
-      i1.setAttribute('type',"text");
-      i1.setAttribute('name',"relayname");
-      i1.setAttribute('value',name);
-      i1.setAttribute('id',"relayname");
-      f2.appendChild(i1info);
-      f2.appendChild(i1);
-
-      var i2info = document.createElement("p");
-      var i2infotxt = document.createTextNode("Gpiopin");
-      i2info.appendChild(i2infotxt);
-
-      var i2 = document.createElement("input");
-      i2.setAttribute('type',"number");
-      i2.setAttribute('name',"gpiopin");
-      i2.setAttribute('value',gpiopin);
-      i2.setAttribute('id',"gpiopin");
-      f2.appendChild(i2info);
-      f2.appendChild(i2);
-
-      div2.appendChild(f2);
-
-      var removerelaydiv = document.createElement("div");
-      removerelaydiv.setAttribute('id',"removerelaydiv");
-      removerelaydiv.setAttribute('class',"button");
-      var txt = document.createTextNode("remove relay");
-      removerelaydiv.appendChild(txt);
-
-      div2.appendChild(removerelaydiv);
-
-
-      var submitdiv = document.createElement("div");
-      submitdiv.setAttribute('id',"changesettings");
-      submitdiv.setAttribute('class',"button");
-      var txt = document.createTextNode("click");
-      submitdiv.appendChild(txt);
-
-      div2.appendChild(submitdiv);
-
-      $('#removerelaydiv').click(function(){
-        var relayname = $('#relayname').val();
-        var gpiopin = $('#gpiopin').val();
-        changejson(relaytochange, relayname, gpiopin, 0, 2);
-        //location.reload();
-      });
-
-      $('#changesettings').click(function(){
-        var relayname = $('#relayname').val();
-        var gpiopin = $('#gpiopin').val();
-        changejson(relaytochange, relayname, gpiopin, 0, 1);
-        //location.reload();
-      });
-    }
-    //and ends here
-
-    $('#addrelaydiv').click(function(){
-      relayoptions(pinarraylength, 1);
-    });
-
-		$('#openmore').click(function(){
-			$('#relayselection option').each(function() {
-  			if($(this).is(':selected')){
-  				var relaytochange = document.getElementById("relayselection").value;
-          relayoptions(relaytochange, 0);
-  			}
-		  });
-		});
-	});
-}
-
-function openswitchsettings() {
-  $('#openswitchsettings').click(function(){
-    console.log("in");
-    var info = document.createElement("p");
-		var infotxt = document.createTextNode("select the switch which info you want to change");
-		info.appendChild(infotxt);
-
-		var form = document.createElement("form");
-		form.setAttribute('method',"post");
-		form.setAttribute('action',"");
-
-		var select = document.createElement("select");
-		select.setAttribute('name',"switchselection");
-		select.setAttribute('size',switcharraylength);
-		select.setAttribute('id',"switchselection");
-    select.setAttribute('class', "selection");
-
-    for (var i = 0; i < switcharraylength; i++) {
-      var switchname = pinarray[1][i][0];
-			var option = document.createElement("option");
-			option.setAttribute('value',i);
-			var txt = document.createTextNode(switchname);
-			option.appendChild(txt);
-			select.appendChild(option);
-		}
-		form.appendChild(select);
-
-    var submitdiv = document.createElement("div");
-		submitdiv.setAttribute('id',"openmore_switch");
-		submitdiv.setAttribute('class',"button");
-		var txt = document.createTextNode("click");
-		submitdiv.appendChild(txt);
-
-    var addswitchdiv = document.createElement("div");
-		addswitchdiv.setAttribute('id',"addswitchdiv");
-		addswitchdiv.setAttribute('class',"button");
-    var txt = document.createTextNode("add switch");
-		addswitchdiv.appendChild(txt);
-
-		var div3 = document.getElementById("switchsettings");
-		div3.appendChild(info);
-		div3.appendChild(form);
-    div3.appendChild(addswitchdiv);
-		div3.appendChild(submitdiv);
-
-    //this function starts here
-    function switchoptions(switchtochange, method){
-      if (method == 1) {
-        var name = "set the switch name";
-        var gpiopin = 0;
-        var relay = 0;
-      }
-      else if (method == 0) {
-        var name = pinarray[1][switchtochange][0];
-        var gpiopin = pinarray[1][switchtochange][1];
-        var relay = pinarray[1][switchtochange][2];
-      }
-
-      $('#openmore_switch').remove();
-
-      var f2 = document.createElement("form");
-      f2.setAttribute('method',"post");
-      f2.setAttribute('action',"");
-
-      //switchname
-      var i1info = document.createElement("p");
-      var i1infotxt = document.createTextNode("Switchname");
-      i1info.appendChild(i1infotxt);
-
-      var i1 = document.createElement("input");
-      i1.setAttribute('type',"text");
-      i1.setAttribute('name',"switchname");
-      i1.setAttribute('value',name);
-      i1.setAttribute('id',"switchname");
-      f2.appendChild(i1info);
-      f2.appendChild(i1);
-
-      //gpiopin
-      var i2info = document.createElement("p");
-      var i2infotxt = document.createTextNode("Gpiopin");
-      i2info.appendChild(i2infotxt);
-
-      var i2 = document.createElement("input");
-      i2.setAttribute('type',"number");
-      i2.setAttribute('name',"gpiopin");
-      i2.setAttribute('value',gpiopin);
-      i2.setAttribute('id',"gpiopin");
-      f2.appendChild(i2info);
-      f2.appendChild(i2);
-
-      //relay
-      var i3info = document.createElement("p");
-      var i3infotxt = document.createTextNode("Relay");
-      i3info.appendChild(i3infotxt);
-
-      var i3 = document.createElement("input");
-      i3.setAttribute('type',"number");
-      i3.setAttribute('name',"switchrelay");
-      i3.setAttribute('value',relay);
-      i3.setAttribute('id',"switchrelay");
-      f2.appendChild(i3info);
-      f2.appendChild(i3);
-
-      div3.appendChild(f2);
-
-      var removeswitchdiv = document.createElement("div");
-      removeswitchdiv.setAttribute('id',"removeswitchdiv");
-      removeswitchdiv.setAttribute('class',"button");
-      var txt = document.createTextNode("remove switch");
-      removeswitchdiv.appendChild(txt);
-
-      div3.appendChild(removeswitchdiv);
-
-
-      var submitdiv = document.createElement("div");
-      submitdiv.setAttribute('id',"changesettings");
-      submitdiv.setAttribute('class',"button");
-      var txt = document.createTextNode("click");
-      submitdiv.appendChild(txt);
-
-      div3.appendChild(submitdiv);
-
-      $('#removerelaydiv').click(function(){
-        var switchname = $('#switchname').val();
-        var gpiopin = $('#gpiopin').val();
-        var relay = $('#switchrelay').val();
-        changejson(switchtochange, switchname, gpiopin, relay, 4);
-        location.reload();
-      });
-
-      $('#changesettings').click(function(){
-        var switchname = $('#switchname').val();
-        var gpiopin = $('#gpiopin').val();
-        var relay = $('#switchrelay').val();
-        changejson(switchtochange, switchname, gpiopin, relay, 3);
-        location.reload();
-      });
-    }
-    //and ends here
-
-    $('#addswitchdiv').click(function(){
-      switchoptions(switcharraylength, 1);
-    });
-
-		$('#openmore_switch').click(function(){
-			$('#switchselection option').each(function() {
-  			if($(this).is(':selected')){
-  				var switchtochange = document.getElementById("switchselection").value;
-          switchoptions(switchtochange, 0);
-  			}
-		  });
-		});
-
-  });
-}
 
 
 function detectchanges(){
@@ -424,8 +136,94 @@ function detectchanges(){
   }
 }
 
-function test(){
 
+/*
+var opensettings = ; //divid which is used to open the settings
+var selectform = ; //formid from form whith selection
+var settingsdiv = ; //div which shows up on click
+
+var datalength = ; //count of switches or relays
+
+var input1id = ; //id of the first input filed
+var input2id = ; //id of the seccond input field
+var input3id =;
+var arraypos = ; //0 = relay / 1 = switches
+var submitsettings = ; //id of the submittsettinggsdiv
+var removebutton = ; //button which should remove the thing
+*/
+function showsettings(opensettings, selectform, settingsdiv, datalength, input1id, input2id, input3id, arraypos, submitsettings, removebutton){
+  var settingsstatus = 0;
+  $(opensettings).click(function(){
+    if (settingsstatus == 0) {
+      settingsstatus = 1;
+      $(settingsdiv).css("display", "block");
+      $(opensettings+" p").text('close');
+
+      var select = document.getElementById(selectform);
+      for (var i = 0; i < datalength; i++) {
+  			var option = document.createElement("option");
+  			option.setAttribute('value',i);
+  			var txt = document.createTextNode(i);
+  			option.appendChild(txt);
+  			select.appendChild(option);
+  		}
+
+      $("#"+selectform).on('change', function(){
+        console.log("selectform changed");
+        var change = $('#'+selectform).val();
+        console.log(change);
+        var name = pinarray[arraypos][change][0];
+        var gpio = pinarray[arraypos][change][1];
+        var relay = pinarray[arraypos][change][2];
+
+        $("#"+input1id).val(name);
+        $("#"+input2id).val(gpio);
+
+        if (input3id != 0) {
+          $("#"+input3id).val(relay);
+        }
+
+        $(submitsettings).click(function(){
+          console.log("submit");
+          var name = $('#'+input1id).val();
+          var gpio = $('#'+input2id).val();
+          if (input3id != 0) {
+            var relay = $('#'+input3id).val();
+            var method = 3;
+          }
+          else {
+            var relay = 0;
+            var method = 1;
+          }
+          changejson(change, name, gpio, relay, method);
+          location.reload();
+        });
+
+        $(removebutton).click(function(){
+          if (input3id != 0) {
+            var method = 4;
+          }
+          else {
+            var method = 2;
+          }
+          changejson(change, 0, 0, 0, method);
+
+          location.reload();
+        });
+
+      });
+    }
+    else if (settingsstatus == 1) {
+      settingsstatus = 2;
+      $(settingsdiv).css("display", "none");
+      $(opensettings+" p").text('open');
+    }
+    else if (settingsstatus == 2) {
+      settingsstatus = 1;
+      $(settingsdiv).css("display", "block");
+      $(opensettings+" p").text('close');
+    }
+  });
 }
 
 function clear(){
@@ -446,11 +244,36 @@ function refresh() {
 
 $(document).ready(function(){
   getarray(function(){
-    test();
-    openswitchsettings();
+    var opensettings = "#openrelaysettings"; //divid which is used to open the settings
+    var selectform = "relayselection"; //formid from form whith selection
+    var settingsdiv = "#relaysettings"; //div which shows up on click
+
+    var datalength = pinarraylength; //count of switches or relays
+
+    var input1id = "relayname"; //id of the first input filed
+    var input2id = "relaygpio"; //id of the seccond input field
+    var input3id = 0;
+    var arraypos = 0; //0 = relay / 1 = switches
+    var submitsettings = "#submitrelaysettings";
+    var removebutton = "#removerelay";
+    showsettings(opensettings, selectform, settingsdiv, datalength, input1id, input2id, input3id, arraypos, submitsettings, removebutton);
+
+
+    var opensettings = "#openswitchsettings"; //divid which is used to open the settings
+    var selectform = "switchselection"; //formid from form whith selection
+    var settingsdiv = "#switchsettings"; //div which shows up on click
+
+    var datalength = switcharraylength; //count of switches or relays
+
+    var input1id = "switchname"; //id of the first input filed
+    var input2id = "switchgpio"; //id of the seccond input field
+    var input3id = "switchrelay";
+    var arraypos = 1; //0 = relay / 1 = switches
+    var submitsettings = "#submitswitchsettings";
+    var removebutton = "#removeswitch";
+    showsettings(opensettings, selectform, settingsdiv, datalength, input1id, input2id, input3id, arraypos, submitsettings, removebutton);
+
     create();
     refresh();
   });
 });
-//$(document).ready(test);
-$(document).ready(opensettings);

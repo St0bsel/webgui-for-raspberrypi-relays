@@ -25,18 +25,64 @@
 		<div id="runboot" class="button">
 			<p>click</p>
 		</div>
-		<p>change parameters of each relay.</p>
-		<div id="opensettings" class="button">
-			<p>click</p>
-		</div>
-		<div id="settings">
-		</div>
-    <p>change parameters of each switch.</p>
-		<div id="openswitchsettings" class="button">
-			<p>click</p>
-		</div>
-    <div id="switchsettings">
+
+    <p>change parameters of each relay.</p>
+    <div id="openrelaysettings" class="button">
+      <p>open</p>
     </div>
+    <div id="relaysettings" class="settings">
+      <p>select the relay to change</p>
+      <form type="post" action="">
+        <select name="relayselection" id="relayselection" class="selection">
+
+        </select>
+      </form>
+      <div id="relaysettings2">
+        <form type="post" action="">
+          <p>relay name</p>
+          <input type="text" name="relayname" value="" id="relayname">
+          <p>gpiopin</p>
+          <input type="number" name="relaygpio" value="" id="relaygpio">
+        </form>
+        <div id="removerelay" class="button">
+          <p>remove relay</p>
+        </div>
+        <div id="submitrelaysettings" class="button">
+          <p>click</p>
+        </div>
+      </div>
+    </div>
+
+
+    <p>change parameters of each switch.</p>
+    <div id="openswitchsettings" class="button">
+      <p>open</p>
+    </div>
+    <div id="switchsettings" class="settings">
+      <p>select the relay to change</p>
+      <form type="post" action="">
+        <select name="switchselection" id="switchselection" class="selection">
+
+        </select>
+      </form>
+      <div id="switchsettings2">
+        <form type="post" action="">
+          <p>switch name</p>
+          <input type="text" name="switchname" value="" id="switchname">
+          <p>gpiopin</p>
+          <input type="number" name="switchgpio" value="" id="switchgpio">
+          <p>relay</p>
+          <input type="number" name="switchrelay" value="" id="switchrelay">
+        </form>
+        <div id="removeswitch" class="button">
+          <p>remove switch</p>
+        </div>
+        <div id="submitswitchsettings" class="button">
+          <p>click</p>
+        </div>
+      </div>
+    </div>
+
 	</div>
   </body>
 </html>
